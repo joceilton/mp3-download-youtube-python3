@@ -1,4 +1,5 @@
 from pytube import Playlist
+import shutil
 import os
 
 yt = Playlist(
@@ -24,6 +25,9 @@ for video in yt.videos:
   os.rename(out_file, new_file)
 
   print(video.title + " has been successfully downloaded.")
+
+shutil.make_archive(pasta_downloads, 'zip', './', pasta_downloads)
+
 
 
 
