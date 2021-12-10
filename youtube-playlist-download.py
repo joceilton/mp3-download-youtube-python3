@@ -1,23 +1,29 @@
-import os
-import re
 from pytube import Playlist
+import os
 
-playlist = Playlist('https://www.youtube.com/watch?v=VsreClRvTyQ&list=PL6gXJiXPDzu28WS3FJd7Yjk49eTrrpqLs')
+yt = Playlist(
+	str(input("Url da Playlist \n>> ")))
 
-DOWNLOAD_DIR = 'E:\\'
+pasta_downloads = '%s' % yt.title
 
-pasta = DOWNLOAD_DIR + '\\%s' % playlist.title
-
-if os.path.isdir(pasta): # vemos de este diretorio ja existe
-    print ('Ja existe uma pasta com esse nome!')
+if os.path.isdir(pasta_downloads):
+  print('A pasta %s já existe, dando continuidade ao processo' %yt.title)
 else:
-    os.mkdir(DOWNLOAD_DIR + '\\%s' % playlist.title) # aqui criamos a pasta caso nao exista
-    print ('Pasta criada com sucesso!')
+  os.mkdir(pasta_downloads)
+  print("Pasta criada com sucesso")
 
-for video in playlist.videos:
-    print('downloading : {} with url : {}'.format(video.title, video.watch_url))
-    video = video.streams.get_by_itag(251)
-    downloaded_file = video.download(pasta)
-    base, ext = os.path.splitext(downloaded_file)
-    new_file = base + '.mp3'
-    os.rename(downloaded_file, new_file)
+
+for video in yt.videos:
+
+  video = video.streams.filter(only_audio=True).first()
+
+  out_file = video.download(output_path=pasta_downloads)
+
+  base, ext = os.path.splitext(out_file)
+  new_file = base + '.mp3'
+  os.rename(out_file, new_file)
+
+  print(video.title + " has been successfully downloaded.")
+
+
+
